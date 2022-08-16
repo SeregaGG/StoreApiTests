@@ -1,9 +1,9 @@
 import random
 
 import pytest
-from connector.Connector import Connector
-from models.Register import Register
-from models.Auth import Auth
+from connector.connector import Connector
+from models.register import Register
+from models.auth import Auth
 from faker import Faker
 
 
@@ -17,8 +17,11 @@ def connection(request):
 @pytest.fixture(scope='class')
 def connection_auth(connection: Connector):
     fake: Faker = Faker()
-    random_data = (fake.name(), fake.password())
-    user_data = Register(*random_data)
+    random_data = {
+        'name': fake.name(),
+        'password': fake.password()
+    }
+    user_data = Register(**random_data)
     connection.user_reg(user_data)
     access_token: Auth = connection.user_auth(user_data)
     return access_token
